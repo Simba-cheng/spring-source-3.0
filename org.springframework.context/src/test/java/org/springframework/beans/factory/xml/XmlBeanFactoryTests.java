@@ -16,21 +16,8 @@
 
 package org.springframework.beans.factory.xml;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.Map;
-
 import org.apache.commons.logging.LogFactory;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
 import org.junit.Test;
-import org.xml.sax.InputSource;
-
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
@@ -41,17 +28,7 @@ import org.springframework.beans.IndexedTestBean;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.ResourceTestBean;
 import org.springframework.beans.TestBean;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanCurrentlyInCreationException;
-import org.springframework.beans.factory.BeanDefinitionStoreException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanIsAbstractException;
-import org.springframework.beans.factory.CannotLoadBeanClassException;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.DummyFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.UnsatisfiedDependencyException;
+import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -64,6 +41,19 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.SerializationTestUtils;
 import org.springframework.util.StopWatch;
+import org.xml.sax.InputSource;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.*;
 
 /**
  * Miscellaneous tests for XML bean definitions.
@@ -74,10 +64,10 @@ import org.springframework.util.StopWatch;
  * @author Chris Beams
  */
 public final class XmlBeanFactoryTests {
-	
+
 	private static final Class<?> CLASS = XmlBeanFactoryTests.class;
 	private static final String CLASSNAME = CLASS.getSimpleName();
-	
+
 	private static final ClassPathResource AUTOWIRE_CONTEXT = classPathResource("-autowire.xml");
 	private static final ClassPathResource CHILD_CONTEXT = classPathResource("-child.xml");
 	private static final ClassPathResource CLASS_NOT_FOUND_CONTEXT = classPathResource("-classNotFound.xml");
@@ -119,7 +109,7 @@ public final class XmlBeanFactoryTests {
 	private static final ClassPathResource REFTYPES_CONTEXT = classPathResource("-reftypes.xml");
 	private static final ClassPathResource DEFAULT_LAZY_CONTEXT = classPathResource("-defaultLazyInit.xml");
 	private static final ClassPathResource DEFAULT_AUTOWIRE_CONTEXT = classPathResource("-defaultAutowire.xml");
-	
+
 	private static ClassPathResource classPathResource(String suffix) {
 		return new ClassPathResource(CLASSNAME + suffix, CLASS);
 	}
