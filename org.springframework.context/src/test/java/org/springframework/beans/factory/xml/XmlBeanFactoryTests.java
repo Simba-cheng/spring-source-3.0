@@ -114,11 +114,38 @@ public final class XmlBeanFactoryTests {
 		return new ClassPathResource(CLASSNAME + suffix, CLASS);
 	}
 
-	/* SPR-2368 */
-	public @Test void testCollectionsReferredToAsRefLocals() throws Exception {
-		XmlBeanFactory factory = new XmlBeanFactory(COLLECTIONS_XSD_CONTEXT);
-		factory.preInstantiateSingletons();
-	}
+    /**
+     * 1.{@link XmlBeanFactory#XmlBeanFactory}
+     * <p>
+     * 2.{@link XmlBeanDefinitionReader#loadBeanDefinitions}
+     * <p>
+     * 3.{@link XmlBeanDefinitionReader#loadBeanDefinitions}
+     * <p>
+     * 4.{@link XmlBeanDefinitionReader#doLoadBeanDefinitions}
+     * <p>
+     * 5.{@link XmlBeanDefinitionReader#getValidationModeForResource} 获取对XML文件的验证模式
+     * <p>
+     * 6.{@link DefaultDocumentLoader#loadDocument} 加载XML文件，并得到对应的Document
+     * <p>
+     * 7.{@link XmlBeanDefinitionReader#registerBeanDefinitions} 根据返回的Document注册Bean信息
+     * <p>
+     * 8.{@link DefaultBeanDefinitionDocumentReader#registerBeanDefinitions} 加载注册bean
+     * <p>
+     * 9.{@link DefaultBeanDefinitionDocumentReader#parseBeanDefinitions}
+     *
+     * 10.{@link }
+     *
+     * 11.{@link }
+     *
+     * 12.{@link }
+     *
+     * @throws Exception
+     */
+    public @Test
+    void testCollectionsReferredToAsRefLocals() throws Exception {
+        XmlBeanFactory factory = new XmlBeanFactory(COLLECTIONS_XSD_CONTEXT);
+        factory.preInstantiateSingletons();
+    }
 
 	public @Test void testRefToSeparatePrototypeInstances() throws Exception {
 		DefaultListableBeanFactory xbf = new DefaultListableBeanFactory();
