@@ -115,29 +115,47 @@ public final class XmlBeanFactoryTests {
 	}
 
     /**
-     * 1.{@link XmlBeanFactory#XmlBeanFactory}
+     * 容器基础-XmlBeanFactory
      * <p>
-     * 2.{@link XmlBeanDefinitionReader#loadBeanDefinitions}
+     * 首先调用classPathResource，构建Resource资源文件的实例对象；这样后续资源可以用Resrouce提供的各种服务
      * <p>
-     * 3.{@link XmlBeanDefinitionReader#loadBeanDefinitions}
+     * 1.{@link XmlBeanFactory#XmlBeanFactory} 将Resource资源对象传入XmlBeanFacoty的构造函数中
      * <p>
-     * 4.{@link XmlBeanDefinitionReader#doLoadBeanDefinitions}
+     * 2.{@link XmlBeanDefinitionReader#loadBeanDefinitions} 从指定的XML文件加载bean定义。
      * <p>
-     * 5.{@link XmlBeanDefinitionReader#getValidationModeForResource} 获取对XML文件的验证模式
+     * 3.{@link XmlBeanDefinitionReader#doLoadBeanDefinitions} 从指定的XML文件加载bean定义
      * <p>
-     * 6.{@link DefaultDocumentLoader#loadDocument} 加载XML文件，并得到对应的Document
+     * 4.{@link XmlBeanDefinitionReader#getValidationModeForResource} 获取对XML文件的验证模式
      * <p>
-     * 7.{@link XmlBeanDefinitionReader#registerBeanDefinitions} 根据返回的Document注册Bean信息
+     * 5.{@link DefaultDocumentLoader#loadDocument} 加载XML文件，并得到对应的Document
      * <p>
-     * 8.{@link DefaultBeanDefinitionDocumentReader#registerBeanDefinitions} 加载注册bean
+     * 6.{@link XmlBeanDefinitionReader#registerBeanDefinitions} 根据返回的Document注册Bean信息
      * <p>
-     * 9.{@link DefaultBeanDefinitionDocumentReader#parseBeanDefinitions}
-     *
-     * 10.{@link }
-     *
-     * 11.{@link }
-     *
+     * 7.{@link DefaultBeanDefinitionDocumentReader#registerBeanDefinitions} 加载注册bean
+     * <p>
+     * 8.{@link DefaultBeanDefinitionDocumentReader#parseBeanDefinitions} XML读取（解析文档中根级别的元素："import","alias","bean"）
+     * <p>
+     * 9.{@link DefaultBeanDefinitionDocumentReader#parseDefaultElement} 解析XML中默认标签
+     * <p>
+     * 10.{@link DefaultBeanDefinitionDocumentReader#processBeanDefinition} 处理给定的bean元素，解析bean定义并将其注册到注册表。
+     * <p>
+     * 11.
+     * <p>
      * 12.{@link }
+     * <p>
+     * 13.{@link }
+     * <p>
+     * 14.{@link }
+     * <p>
+     * 15.{@link }
+     * <p>
+     * 16.{@link }
+     * <p>
+     * 17.{@link }
+     * <p>
+     * 18.{@link }
+     * <p>
+     * 19{@link }
      *
      * @throws Exception
      */

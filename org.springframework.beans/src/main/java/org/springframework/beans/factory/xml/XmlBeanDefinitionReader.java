@@ -292,62 +292,65 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 
 
-	/**
-	 * Load bean definitions from the specified XML file.
-	 * @param resource the resource descriptor for the XML file
-	 * @return the number of bean definitions found
-	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
-	 */
-	public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {
-		return loadBeanDefinitions(new EncodedResource(resource));
-	}
+    /**
+     * Load bean definitions from the specified XML file.
+     * <p>
+     * 从指定的XML文件加载bean定义
+     *
+     * @param resource the resource descriptor for the XML file
+     * @return the number of bean definitions found
+     * @throws BeanDefinitionStoreException in case of loading or parsing errors
+     */
+    public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {
+        return loadBeanDefinitions(new EncodedResource(resource));
+    }
 
-	/**
-	 * Load bean definitions from the specified XML file.
-	 * @param encodedResource the resource descriptor for the XML file,
-	 * allowing to specify an encoding to use for parsing the file
-	 * @return the number of bean definitions found
-	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
-	 */
-	public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefinitionStoreException {
-		Assert.notNull(encodedResource, "EncodedResource must not be null");
-		if (logger.isInfoEnabled()) {
-			logger.info("Loading XML bean definitions from " + encodedResource.getResource());
-		}
+    /**
+     * Load bean definitions from the specified XML file.
+     * <p>
+     * 从指定的XML文件加载bean定义。
+     *
+     * @param encodedResource the resource descriptor for the XML file,
+     *                        allowing to specify an encoding to use for parsing the file
+     * @return the number of bean definitions found
+     * @throws BeanDefinitionStoreException in case of loading or parsing errors
+     */
+    public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefinitionStoreException {
+        Assert.notNull(encodedResource, "EncodedResource must not be null");
+        if (logger.isInfoEnabled()) {
+            logger.info("Loading XML bean definitions from " + encodedResource.getResource());
+        }
 
-		Set<EncodedResource> currentResources = this.resourcesCurrentlyBeingLoaded.get();
-		if (currentResources == null) {
-			currentResources = new HashSet<EncodedResource>(4);
-			this.resourcesCurrentlyBeingLoaded.set(currentResources);
-		}
-		if (!currentResources.add(encodedResource)) {
-			throw new BeanDefinitionStoreException(
-					"Detected recursive loading of " + encodedResource + " - check your import definitions!");
-		}
-		try {
-			InputStream inputStream = encodedResource.getResource().getInputStream();
-			try {
-				InputSource inputSource = new InputSource(inputStream);
-				if (encodedResource.getEncoding() != null) {
-					inputSource.setEncoding(encodedResource.getEncoding());
-				}
-				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
-			}
-			finally {
-				inputStream.close();
-			}
-		}
-		catch (IOException ex) {
-			throw new BeanDefinitionStoreException(
-					"IOException parsing XML document from " + encodedResource.getResource(), ex);
-		}
-		finally {
-			currentResources.remove(encodedResource);
-			if (currentResources.isEmpty()) {
-				this.resourcesCurrentlyBeingLoaded.set(null);
-			}
-		}
-	}
+        Set<EncodedResource> currentResources = this.resourcesCurrentlyBeingLoaded.get();
+        if (currentResources == null) {
+            currentResources = new HashSet<EncodedResource>(4);
+            this.resourcesCurrentlyBeingLoaded.set(currentResources);
+        }
+        if (!currentResources.add(encodedResource)) {
+            throw new BeanDefinitionStoreException(
+                    "Detected recursive loading of " + encodedResource + " - check your import definitions!");
+        }
+        try {
+            InputStream inputStream = encodedResource.getResource().getInputStream();
+            try {
+                InputSource inputSource = new InputSource(inputStream);
+                if (encodedResource.getEncoding() != null) {
+                    inputSource.setEncoding(encodedResource.getEncoding());
+                }
+                return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
+            } finally {
+                inputStream.close();
+            }
+        } catch (IOException ex) {
+            throw new BeanDefinitionStoreException(
+                    "IOException parsing XML document from " + encodedResource.getResource(), ex);
+        } finally {
+            currentResources.remove(encodedResource);
+            if (currentResources.isEmpty()) {
+                this.resourcesCurrentlyBeingLoaded.set(null);
+            }
+        }
+    }
 
 	/**
 	 * Load bean definitions from the specified XML file.

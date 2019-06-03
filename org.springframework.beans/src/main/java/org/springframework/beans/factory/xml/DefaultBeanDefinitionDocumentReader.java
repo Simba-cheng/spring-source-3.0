@@ -125,19 +125,27 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
     /**
      * Parse the elements at the root level in the document:
      * "import", "alias", "bean".
+     * <p>
+     * 解析文档中根级别的元素：“import”，“alias”，“bean”。
      *
      * @param root the DOM root element of the document
      */
-	protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
+    protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
         if (delegate.isDefaultNamespace(delegate.getNamespaceURI(root))) {
             //默认命名空间解析
+
+            //获取root节点下的子节点
             NodeList nl = root.getChildNodes();
+
             for (int i = 0; i < nl.getLength(); i++) {
                 Node node = nl.item(i);
                 if (node instanceof Element) {
                     Element ele = (Element) node;
+
                     String namespaceUri = delegate.getNamespaceURI(ele);
+
                     if (delegate.isDefaultNamespace(namespaceUri)) {
+                        //解析默认标签
                         parseDefaultElement(ele, delegate);
                     } else {
                         delegate.parseCustomElement(ele);
@@ -150,21 +158,35 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
         }
     }
 
+    /**
+     * 解析默认标签
+     *
+     * @param ele
+     * @param delegate
+     */
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
-		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
-			importBeanDefinitionResource(ele);
-		}
-		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
-			processAliasRegistration(ele);
-		}
-		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
-			processBeanDefinition(ele, delegate);
-		}
-	}
+        if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
+
+            //解析“import”元素并将bean定义从给定资源加载到bean工厂中。
+            importBeanDefinitionResource(ele);
+
+        } else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
+
+            //处理给定的别名元素，向注册表注册别名。
+            processAliasRegistration(ele);
+
+        } else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
+
+            //处理给定的bean元素，解析bean定义并将其注册到注册表。
+            processBeanDefinition(ele, delegate);
+        }
+    }
 
 	/**
 	 * Parse an "import" element and load the bean definitions
 	 * from the given resource into the bean factory.
+     *
+     * 解析“import”元素并将bean定义从给定资源加载到bean工厂中。
 	 */
 	protected void importBeanDefinitionResource(Element ele) {
 		String location = ele.getAttribute(RESOURCE_ATTRIBUTE);
@@ -178,7 +200,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 
 		Set<Resource> actualResources = new LinkedHashSet<Resource>(4);
 
-		// Discover whether the location is an absolute or relative URI 
+		// Discover whether the location is an absolute or relative URI
 		boolean absoluteLocation = false;
 		try {
 			absoluteLocation = ResourcePatternUtils.isUrl(location) || ResourceUtils.toURI(location).isAbsolute();
@@ -233,51 +255,56 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 
 	/**
 	 * Process the given alias element, registering the alias with the registry.
+     * 处理给定的别名元素，向注册表注册别名。
 	 */
 	protected void processAliasRegistration(Element ele) {
-		String name = ele.getAttribute(NAME_ATTRIBUTE);
-		String alias = ele.getAttribute(ALIAS_ATTRIBUTE);
-		boolean valid = true;
-		if (!StringUtils.hasText(name)) {
-			getReaderContext().error("Name must not be empty", ele);
-			valid = false;
-		}
-		if (!StringUtils.hasText(alias)) {
-			getReaderContext().error("Alias must not be empty", ele);
-			valid = false;
-		}
-		if (valid) {
-			try {
-				getReaderContext().getRegistry().registerAlias(name, alias);
-			}
-			catch (Exception ex) {
-				getReaderContext().error("Failed to register alias '" + alias +
-						"' for bean with name '" + name + "'", ele, ex);
-			}
-			getReaderContext().fireAliasRegistered(name, alias, extractSource(ele));
-		}
-	}
+        String name = ele.getAttribute(NAME_ATTRIBUTE);
+        String alias = ele.getAttribute(ALIAS_ATTRIBUTE);
+        boolean valid = true;
+        if (!StringUtils.hasText(name)) {
+            getReaderContext().error("Name must not be empty", ele);
+            valid = false;
+        }
+        if (!StringUtils.hasText(alias)) {
+            getReaderContext().error("Alias must not be empty", ele);
+            valid = false;
+        }
+        if (valid) {
+            try {
+                getReaderContext().getRegistry().registerAlias(name, alias);
+            } catch (Exception ex) {
+                getReaderContext().error("Failed to register alias '" + alias +
+                        "' for bean with name '" + name + "'", ele, ex);
+            }
+            getReaderContext().fireAliasRegistered(name, alias, extractSource(ele));
+        }
+    }
 
 	/**
 	 * Process the given bean element, parsing the bean definition
 	 * and registering it with the registry.
+     *
+     * 处理给定的bean元素，解析bean定义并将其注册到注册表。
 	 */
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
-		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
-		if (bdHolder != null) {
-			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
-			try {
-				// Register the final decorated instance.
-				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
-			}
-			catch (BeanDefinitionStoreException ex) {
-				getReaderContext().error("Failed to register bean definition with name '" +
-						bdHolder.getBeanName() + "'", ele, ex);
-			}
-			// Send registration event.
-			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
-		}
-	}
+
+        //解析提供的<bean>元素。 如果在解析期间出现错误，则可能返回null
+        BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
+        if (bdHolder != null) {
+
+            bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
+
+            try {
+                // Register the final decorated instance.
+                BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
+            } catch (BeanDefinitionStoreException ex) {
+                getReaderContext().error("Failed to register bean definition with name '" +
+                        bdHolder.getBeanName() + "'", ele, ex);
+            }
+            // Send registration event.
+            getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
+        }
+    }
 
 
 	/**
