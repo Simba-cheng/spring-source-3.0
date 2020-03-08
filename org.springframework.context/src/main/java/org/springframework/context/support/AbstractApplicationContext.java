@@ -166,10 +166,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors =
 			new ArrayList<BeanFactoryPostProcessor>();
 
-	/** System time in milliseconds when this context started */
+	/**
+	 * 刷新上下文的系统时间(毫秒)
+	 * System time in milliseconds when this context started
+	 */
 	private long startupDate;
 
-	/** Flag that indicates whether this context is currently active */
+	/**
+	 * 标识 上下文是否处于活动状态
+	 * Flag that indicates whether this context is currently active
+	 */
 	private boolean active = false;
 
 	/** Synchronization monitor for the "active" flag */
@@ -378,11 +384,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return this.applicationListeners;
 	}
 
-
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 
-			//容器刷新前的准备，设置启动日期和活动标识
+			//容器、上下文 刷新前准备（设置启动日期和活动标识）
 			prepareRefresh();
 
 			//获取新的beanFactory，销毁原有beanFactory、为每个bean生成BeanDefinition等  注意，此处是获取新的，销毁旧的，这就是刷新的意义
@@ -460,8 +465,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	/**
 	 * 准备刷新上下文，设置启动日志、活动标识
 	 *
-	 * Prepare this context for refreshing, setting its startup date and
-	 * active flag.
+	 * Prepare this context for refreshing, setting its startup date and active flag.
 	 */
 	protected void prepareRefresh() {
 		this.startupDate = System.currentTimeMillis();
@@ -477,6 +481,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	/**
 	 * Tell the subclass to refresh the internal bean factory.
+	 *
 	 * @return the fresh BeanFactory instance
 	 * @see #refreshBeanFactory()
 	 * @see #getBeanFactory()
