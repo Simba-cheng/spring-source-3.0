@@ -23,6 +23,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
 /**
+ * 从类路径解析指定的上下文配置文件(applicationContext.xml)
+ * <p>
+ * 将配置文件路径解析为指定格式路径
+ * <p>
  * Standalone XML application context, taking the context definition files
  * from the class path, interpreting plain paths as class path resource names
  * that include the package path (e.g. "mypackage/myresource.txt"). Useful for
@@ -137,6 +141,7 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			throws BeansException {
 
 		super(parent);
+		//设置 applicationContext.xml 配置文件路径
 		setConfigLocations(configLocations);
 		if (refresh) {
 			refresh();
