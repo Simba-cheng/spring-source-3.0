@@ -6,7 +6,7 @@
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.0.RELEASE</version>
+    <version>4.3.21.RELEASE</version>
     <parent>
         <groupId>org.springframework</groupId>
         <artifactId>spring-parent</artifactId>
